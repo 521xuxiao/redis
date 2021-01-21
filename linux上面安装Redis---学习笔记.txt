@@ -1,0 +1,54 @@
+
+一. 安装redis
+
+	1. 官网下载redis.tar.gz    （window版的直接放到电脑上面双击redis-windows-server.exe运行就行）
+
+	2. 通过xshell放到linux上面， 解压 tar  -xvf  压缩包名字
+
+	3. 编译一下  make
+
+	4. 安装 make install
+
+	
+二. 修改redis的配置文件redis.conf文件
+
+	1.69行注掉  bind127.0.0.1   为了别的电脑能访问这台redis服务器
+	
+	2. 88行关闭保护模式  protected-mode no  能远程访问这个redis服务器
+	
+	3. 92行 端口号
+	
+	4. 136行开启后台启动  daemonize yes
+	
+	5. 
+	
+	
+三. 运行redis
+
+	1. 后台运行redis命令  redis-server redis-conf
+	
+	2. 进入redis客户端  redis-cli -p 6379
+	
+	3. 退出redis客户端  Ctrl+c
+	
+	4. 关闭redis        redis-cli -p 6379 shutdown
+	
+四. redis的存储数据的操作的一些命令
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+ 
