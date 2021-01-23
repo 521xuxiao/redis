@@ -1,0 +1,2 @@
+Test1Controller：缓存写在代码里面的
+AOPRedisController：缓存写在aop里面，用了自定义注解+过期时间其清理缓存的机制（单台redis）
