@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 @Aspect
 public class CashAOP {
@@ -47,10 +49,11 @@ public class CashAOP {
         String className = proceedingJoinPoint.getSignature().getDeclaringTypeName(); // 类名
         String methodName = proceedingJoinPoint.getSignature().getName();   // 方法名
         String key = className+","+methodName;
-        Object[] arr = proceedingJoinPoint.getArgs();
-        for (Object item:arr) {
-            key += item+"::";
+        Map<String, Object> maps = (Map<String, Object>) proceedingJoinPoint.getArgs()[0];
+        for(String itemKey : maps.keySet()){
+            key += "::" + maps.get(itemKey);
         }
+        System.err.println("56: "+ key);
         return key;
     }
 }

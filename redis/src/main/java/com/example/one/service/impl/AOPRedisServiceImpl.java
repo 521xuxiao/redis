@@ -16,7 +16,7 @@ public class AOPRedisServiceImpl implements AOPRedisService {
     private AOPRedisDap aopRedisDap;
 
     @Override
-    @CashFind(seconds = 1)
+    @CashFind
     public List<Map<String, Object>> queryUserRedis(Map<String, Object> params, HttpServletRequest request) {
         return aopRedisDap.queryUserRedis(params);
     }
