@@ -101,11 +101,13 @@
 	
 	
 七. 分片  （3台，内存扩容）
+
 	1.根目录中创建shareds文件夹
 	2.将 redis.conf文件复制到shareds文件夹中，分别命名为6379.conf， 6380.conf,  6381.conf，修改相应的端口
 	
 
-八. 哨兵  （实现高可用）
+八. 哨兵  （3台 实现高可用，但是不能扩容）
+
 	1.根目录中创建sentinel文件夹
     2.将 redis.conf文件复制到sentinel文件夹中，分别命名为6379.conf， 6380.conf,  6381.conf，修改相应的端口
 	3.主从挂载： 查询当前是主机还是从机的命令   info replication
@@ -126,12 +128,29 @@
 		4.sentinel failover-timeout mymaster 180000         哨兵选举从机等待3分钟，还不成功就可以重新选举
 	6.启动哨兵命令 redis-sentinel sentinel.conf
 	
-九. 集群
+九. 集群（3主3从 实现高可用）
+	
+	1.redis根目录里面创建cluster文件夹
+	2.里面创建6个空文件夹，分别为7000， 7001， 7002， 7003， 7004， 7005
+	3.将redis.conf配置文件复制一份放到7000， 7001， 7002， 7003， 7004， 7005
+	4.修改配置文件redis.conf文件里面的内容，总共11处需要改的
+	
+		1.bind 127.0.0.1      注释掉本地访问的ip
+		2.protected-mode  no  关闭保护模式
+		3.port 7000           修改端口号
+		4.daemonize yes       启动后台
+		5.pidfile /usr/local/src/redis/cluster/7000/redis.pid     修改pid号
+		6.dir /usr/local/src/redis/cluster/7000                   修改持久化文件路径
+		7.maxmemory-policy volititle-lru                          设定内存优化策略
+		8.appendonly no       关闭aof，启用默认的rdb持久化模式
+		9.cluster-enabled  yes 开启redis集群
+		10.cluster-config-file nodes.conf  开启集群配置文件
+		11.cluster-node-timeout            修改集群超时时间
 	
 	
 	
 	
-	
+
 	
 	
 	
