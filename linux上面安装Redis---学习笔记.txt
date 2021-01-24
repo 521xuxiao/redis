@@ -20,8 +20,9 @@
 	
 	4. 136行开启后台启动  daemonize yes
 	
-	5. 
+	5. 699行开启aop模式   appendonly yes
 	
+	6. 597行删除内存策略  maxmemory-policy allkeys-lru  （几种模式见六里面的内存优化策略）
 	
 三. 运行redis
 
@@ -66,12 +67,66 @@
 	5.Hset类型
 	
 	    注： 具体请看word文档
+		
 			  
-五. 
+五. redis持久化策略
+
+	1.RDB模式
+			redis默认持久化策略，定期持久化；可能会丢失数据；记录的数据是内存的快照，每次保存最新的数据，文件相对较小，
+			数据恢复较快， 文件名称dump.rdb
+	2.AOF模式
+			需要手动开启，实时持久化，记录用户的过程，追加到持久化文件中，持久化文件相对较大，恢复的时间较长
+			
+			
+		注：集群搭建主从结构，主机使用rdb模式， 从机使用aof模式
+			
 			  
+六. 删除策略
+
+	1. LRU模式：时间长的删除
+			
+	
+	2. LFU模式：使用次数少的删除
 			
 			
+	内存优化策略：
+	1. allkeys-lru       所有数据采用lru删除数据
+	2. allkeys-lfu       所有数据采用lfu删除数据
+	3. volititle-lru     设定超时间的采用lru删除数据
+	4. volititle-lfu     设定超时间的采用lfu删除数据
+	5. volititle-random  设定超时时间的采用随机算法删除数据
+	6. allkeys-random    所有的数据采用随机算法删除数据
+	7. volititle-ttl     设定超市时间的采用ttl算法删除数据
+	8. noeviction        默认策略，不删除数据，内存满了报错
+	
+	
+七. 分片  （3台，内存扩容）
+	1.根目录中创建shareds文件夹
+	2.将 redis.conf文件复制到shareds文件夹中，分别命名为6379.conf， 6380.conf,  6381.conf，修改相应的端口
+	
+
+八. 哨兵  （实现高可用）
+	1.根目录中创建sentinel文件夹
+    2.将 redis.conf文件复制到sentinel文件夹中，分别命名为6379.conf， 6380.conf,  6381.conf，修改相应的端口
+	3.主从挂载： 查询当前是主机还是从机的命令   info replication
+		规定6379为主， 6380 6381为从
+		将6380挂载到6379身上：进到6380客户端里面，执行slave 192.168.92.129 6379
+		将6381挂载到6379身上：进到6381客户端里面，执行slave 192.168.92.129 6379
+			注：从机挂载到主机上面，就不能操作从机了，只能操作主机，数据会自动同步到从机里面
 			
+	4.哨兵服务启动时，先监控主机的状态，同时获取主机的相关信息，
+		哨兵会通过心跳监测，定期的检查主机的状态
+		如果发现主机超过三次没有响应，断定宕机，开启选举机制
+		当哨兵推选一台从机当做主机时，其它的都是从机
+	5.配置哨兵
+		1.protected-mode no   关闭保护模式
+		2.daemonize  yes      开启后台启动
+		3.sentinel monitor mymaster 192.168.92.129 6379 1   监测主机ip和端口，1代表有一票，因为就有一个哨兵
+		3.sentinel down-after-milliseconds mymaster 10000   主机宕机10s之后开始选举
+		4.sentinel failover-timeout mymaster 180000         哨兵选举从机等待3分钟，还不成功就可以重新选举
+	6.启动哨兵命令 redis-sentinel sentinel.conf
+	
+九. 集群
 	
 	
 	

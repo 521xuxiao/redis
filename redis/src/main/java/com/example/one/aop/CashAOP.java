@@ -7,36 +7,43 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisSentinelPool;
 
 import java.util.Map;
 
 @Component
 @Aspect
 public class CashAOP {
-    @Autowired
-    private ResisConfig redisConfig;
+    @Autowired(required = false)
+    private JedisSentinelPool jedisSentinelPool;   // 哨兵
+//    private ResisConfig redisConfig;             // 单个redis
     @Around("@annotation(cashFind)")
     public Object around(ProceedingJoinPoint proceedingJoinPoint, CashFind cashFind) {
+        Jedis jedis = jedisSentinelPool.getResource();     // 哨兵
+//        Jedis jedis = redisConfig.jedis();               // 单个redis
         String key = getKey(proceedingJoinPoint, cashFind);
         Object obj = null;
-        if(redisConfig.jedis().get(key) == null) {
+        if(jedis.get(key) == null) {
             try{
                 obj = proceedingJoinPoint.proceed();
                 if(cashFind.seconds()>0) {
-                    redisConfig.jedis().setex(key, cashFind.seconds(), JSON.toJSONString(obj));
+                    jedis.setex(key, cashFind.seconds(), JSON.toJSONString(obj));
                 }else{
-                    redisConfig.jedis().set(key, JSON.toJSONString(obj));
+                    jedis.set(key, JSON.toJSONString(obj));
                 }
                 System.err.println("数据库");
+                jedis.close();         // 哨兵
                 return obj;
             }catch(Throwable e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }else{
-            String value = redisConfig.jedis().get(key);
+            String value = jedis.get(key);
             Object objs = JSON.parse(value);
             System.err.println("redis");
+            jedis.close();     // 哨兵
             return objs;
         }
     }
