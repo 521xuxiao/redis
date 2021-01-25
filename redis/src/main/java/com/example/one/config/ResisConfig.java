@@ -5,10 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisSentinelPool;
-import redis.clients.jedis.JedisShardInfo;
-import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,13 +51,33 @@ public class ResisConfig {
     /**
      * 配置redis哨兵
      */
-    @Value("${redis.sentinel}")
-    private String sentinel;
+//    @Value("${redis.sentinel}")
+//    private String sentinel;
+//    @Bean
+//    public JedisSentinelPool sentinelPool() {
+//        Set<String> sentinels = new HashSet<>();
+//        sentinels.add(sentinel);
+//        JedisSentinelPool jedisSentinelPool = new JedisSentinelPool("mymaster", sentinels);
+//        return jedisSentinelPool;
+//    }
+
+    ////////////////////////////////////////////////////////////////////
+    /**
+     * 配置redis集群
+     */
+    @Value("${redis.nodes}")
+    private String nodes;
     @Bean
-    public JedisSentinelPool sentinelPool() {
-        Set<String> sentinels = new HashSet<>();
-        sentinels.add(sentinel);
-        JedisSentinelPool jedisSentinelPool = new JedisSentinelPool("mymaster", sentinels);
-        return jedisSentinelPool;
+    @Scope("prototype")
+    public JedisCluster jedisCluster() {
+        Set<HostAndPort> setNode = new HashSet<>();
+        String[] arrayNodes = nodes.split(",");
+        for (String node: arrayNodes) {
+            String host = node.split(":")[0];
+            int port = Integer.parseInt(node.split(":")[1]);
+            HostAndPort hostAndPort = new HostAndPort(host, port);
+            setNode.add(hostAndPort);
+        }
+        return new JedisCluster(setNode);
     }
 }

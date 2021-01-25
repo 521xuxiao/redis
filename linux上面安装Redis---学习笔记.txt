@@ -146,7 +146,35 @@
 		9.cluster-enabled  yes 开启redis集群
 		10.cluster-config-file nodes.conf  开启集群配置文件
 		11.cluster-node-timeout            修改集群超时时间
-	
+		
+	5.开启脚本（start.sh）
+		#！/bin/sh
+		redis-server 7000.conf &
+		redis-server 7001.conf &
+		redis-server 7002.conf &
+		redis-server 7003.conf &
+		redis-server 7004.conf &
+		redis-server 7005.conf &
+		保存  
+		运行  sh start.sh
+		
+	6.关闭脚本  （stop.sh）
+		#！/bin/sh
+		redis-cli -p 7000 shutdown &
+		redis-cli -p 7001 shutdown &
+		redis-cli -p 7002 shutdown &
+		redis-cli -p 7003 shutdown &
+		redis-cli -p 7004 shutdown &
+		redis-cli -p 7005 shutdown &
+		保存
+		运行  sh stop.sh
+		
+	7.集群搭建
+		redis-cli --cluster create --cluster-replicas 1 192.168.203.128:7000 192.168.203.128:7001 192.168.203.128:7002 192.168.203.128:7003 192.168.203.128:7004 192.168.203.128:7005
+	    注：命令行和ip之间的1代表一个主机跟一个从机；2代表一个主机跟2个从机
+		
+		哪台redis服务器宕机，所有的redis节点都可以检测，但是选举只能是主机选举
+		
 	
 	
 	

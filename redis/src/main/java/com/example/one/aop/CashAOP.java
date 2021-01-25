@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisSentinelPool;
 
 import java.util.Map;
@@ -16,11 +17,12 @@ import java.util.Map;
 @Aspect
 public class CashAOP {
     @Autowired(required = false)
-    private JedisSentinelPool jedisSentinelPool;   // 哨兵
+    private JedisCluster jedis;           //  集群
+//    private JedisSentinelPool jedisSentinelPool;   // 哨兵
 //    private ResisConfig redisConfig;             // 单个redis
     @Around("@annotation(cashFind)")
     public Object around(ProceedingJoinPoint proceedingJoinPoint, CashFind cashFind) {
-        Jedis jedis = jedisSentinelPool.getResource();     // 哨兵
+//        Jedis jedis = jedisSentinelPool.getResource();     // 哨兵
 //        Jedis jedis = redisConfig.jedis();               // 单个redis
         String key = getKey(proceedingJoinPoint, cashFind);
         Object obj = null;
@@ -33,7 +35,7 @@ public class CashAOP {
                     jedis.set(key, JSON.toJSONString(obj));
                 }
                 System.err.println("数据库");
-                jedis.close();         // 哨兵
+//                      // 哨兵
                 return obj;
             }catch(Throwable e) {
                 e.printStackTrace();
@@ -43,7 +45,7 @@ public class CashAOP {
             String value = jedis.get(key);
             Object objs = JSON.parse(value);
             System.err.println("redis");
-            jedis.close();     // 哨兵
+//              // 哨兵
             return objs;
         }
     }
