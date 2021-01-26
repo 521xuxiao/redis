@@ -1,4 +1,5 @@
-
+关闭 linux 防火墙  chkconfig iptables off
+                             service iptables stop
 一. 安装redis
 
 	1. 官网下载redis.tar.gz    （window版的直接放到电脑上面双击redis-windows-server.exe运行就行）
