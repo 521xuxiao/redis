@@ -57,7 +57,7 @@ public class CashAOP {
         //没传key参数，就自己拼key这个参数
         String className = proceedingJoinPoint.getSignature().getDeclaringTypeName(); // 类名
         String methodName = proceedingJoinPoint.getSignature().getName();   // 方法名
-        String key = className+","+methodName;
+        String key = className+"."+methodName;
         Map<String, Object> maps = (Map<String, Object>) proceedingJoinPoint.getArgs()[0];
         for(String itemKey : maps.keySet()){
             key += "::" + maps.get(itemKey);
