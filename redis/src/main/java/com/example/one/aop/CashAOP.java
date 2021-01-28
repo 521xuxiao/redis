@@ -97,8 +97,8 @@ public class CashAOP {
 
 
 
-
-
+//   存的时候用  @CashFind   在查询的时候用
+//   删的时候用  @CashDelete("com.example.one.service.impl.AOPRedisServiceImpl.queryUserRedis")   在增删改的时候用
 
 
 
