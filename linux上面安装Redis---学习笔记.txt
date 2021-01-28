@@ -1,5 +1,9 @@
 关闭 linux 防火墙  chkconfig iptables off
-                             service iptables stop
+		  service iptables stop
+查看端口号被占用   netstat -tunlp | grep 2181
+杀死进程          kill -9 pid号
+
+			     
 一. 安装redis
 
 	1. 官网下载redis.tar.gz    （window版的直接放到电脑上面双击redis-windows-server.exe运行就行）
