@@ -65,4 +65,41 @@ public class CashAOP {
         System.err.println("56: "+ key);
         return key;
     }
+    
+    
+    /**
+     * 使用者传键删除redis里面的数据
+     * @param proceedingJoinPoint
+     * @param cashDelete
+     * @return
+     */
+    @Around("@annotation(cashDelete)")
+    public Object around(ProceedingJoinPoint proceedingJoinPoint, CashDelete cashDelete) {
+        String key = cashDelete.key();
+        Collection<JedisPool> jedisPools = jedis.getClusterNodes().values();
+        for (JedisPool pool : jedisPools) {
+            Jedis jedis1 =  pool.getResource();
+             Set<String> set = jedis1.keys(key+"*");
+            for (String item: set) {
+                jedis.del(item);
+            }
+        }
+        try{
+            Object o = proceedingJoinPoint.proceed();
+        }catch(Throwable e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
+
+
+
+
+
+
+
+
+
+
