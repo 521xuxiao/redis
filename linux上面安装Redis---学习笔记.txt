@@ -1,3 +1,19 @@
+配置环境变量
+#set java env
+JAVA_HOME=/usr/local/src/jdk1.8
+JAVA_BIN=/usr/local/src/jdk1.8/bin
+PATH=$JAVA_HOME/bin:$PATH
+CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export JAVA_HOME JAVA_BIN PATH CLASSPATH
+
+重进加载一下环境
+source /etc/profile
+
+
+
+
+
+
 关闭 linux 防火墙  chkconfig iptables off
 		  service iptables stop
 查看端口号被占用   netstat -tunlp | grep 2181
