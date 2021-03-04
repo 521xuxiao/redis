@@ -26,7 +26,7 @@ source /etc/profile
 
 	2. 通过xshell放到linux上面， 解压 tar  -xvf  压缩包名字
 
-	3. 编译一下  make
+	3. 编译一下  make  报错就要安装gcc， 然后clrean一下
 
 	4. 安装 make install
 
