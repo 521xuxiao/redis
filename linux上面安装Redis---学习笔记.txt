@@ -44,7 +44,7 @@ source /etc/profile
 	5. 699行开启aop模式   appendonly yes
 	
 	6. 597行删除内存策略  maxmemory-policy allkeys-lru  （几种模式见六里面的内存优化策略）
-
+        设置密码  config set requirepass "123456" 这样在使用redis的时候就得先登录一下了  auth 123456
 	
 三. 运行redis
 
