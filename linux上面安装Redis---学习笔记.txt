@@ -44,6 +44,7 @@ source /etc/profile
 	5. 699行开启aop模式   appendonly yes
 	
 	6. 597行删除内存策略  maxmemory-policy allkeys-lru  （几种模式见六里面的内存优化策略）
+
 	
 三. 运行redis
 
