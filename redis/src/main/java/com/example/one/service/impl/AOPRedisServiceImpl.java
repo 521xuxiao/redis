@@ -16,7 +16,7 @@ public class AOPRedisServiceImpl implements AOPRedisService {
     private AOPRedisDap aopRedisDap;
 
     @Override
-    @CashFind
+    @CashFind(seconds=20)  // 20秒之后冲redis里面自动删除
     public List<Map<String, Object>> queryUserRedis(Map<String, Object> params, HttpServletRequest request) {
         return aopRedisDap.queryUserRedis(params);
     }
