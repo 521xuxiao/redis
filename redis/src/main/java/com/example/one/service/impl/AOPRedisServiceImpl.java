@@ -20,4 +20,9 @@ public class AOPRedisServiceImpl implements AOPRedisService {
     public List<Map<String, Object>> queryUserRedis(Map<String, Object> params, HttpServletRequest request) {
         return aopRedisDap.queryUserRedis(params);
     }
+    
+    @CashDelets(key="com.example.one.service.impl.AOPRedisServiceImpl.queryUserRedis")  // 做增删改的时候删除redis里面的数据
+    public List<Map<String, Object>> queryUserRedis(Map<String, Object> params, HttpServletRequest request) {
+        return aopRedisDap.queryUserRedis(params);
+    }
 }
